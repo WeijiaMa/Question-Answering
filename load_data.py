@@ -12,29 +12,36 @@ def load_data():
     innerfile = d["data"]
 
     context_paragraph = {}
+
     #context_paragraph maps each topic to its paragraph
 
-    question_dict = {}
-    #question_dict maps each topic to a list of questions
+    question_ans_pairs = {}
+
+    #question_ans_pairs maps each topic to a list of questions
 
 
     for i in innerfile:
         subject = i["title"]
         context_paragraph[subject] = i["paragraphs"][0]["context"]
         question_set = i["paragraphs"][0]["qas"]
-        question_list = []
-        answer_list = []
-        for j in question_set:
-            question_list.append(j["question"])
+        #question_list = []
+        #answer_list = []
+        for j in question_set: 
+            qapair = {}
+            #question_list.append(j["question"])
+            question = j["question"]
             answer_options = []
             for k in j["answers"]:
                 answer_options.append(k["text"])
-            answer_list.append(answer_options)
+            #answer_list.append(answer_options)
+            qapair[question] = answer_options
+            question_ans_pairs[subject] = qapair
 
-        question_dict[subject] = (question_list, answer_list)
+        #question_dict[subject] = (question_list, answer_list)
 
-    #print(context_paragraph["Super_Bowl_50"])
-    #print(question_dict["Super_Bowl_50"])
+    print(context_paragraph["Super_Bowl_50"])
+    print(" ")
+    print(question_ans_pairs)
 
 
 
