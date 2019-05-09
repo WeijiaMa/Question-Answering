@@ -15,7 +15,9 @@ from random import randint
 def create_answer(topic, question, paragraphs):
     #should question be irrelevant, or should we make the guessing slightly smarter?
     current_paragraph = paragraphs[topic]
+    
     sentences = current_paragraph.split(".")
+    # ^ currently the split splits more than sentences
     index = random.randint(0, len(sentences) - 2)
     
     return sentences[index]
@@ -24,7 +26,11 @@ def create_answer(topic, question, paragraphs):
 def main():
     paragraphs, qapairs = load_data.load_data()
     
-    #print(create_answer("Super_Bowl_50", "", paragraphs))
+    for topic in paragraphs:
+        for question in qapairs[topic]:           
+            answer = create_answer(topic, question, paragraphs)
+            print("Q: ", question)
+            print("A: ", answer)
     
         
 if __name__ == '__main__':
