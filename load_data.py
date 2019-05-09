@@ -26,7 +26,7 @@ def load_data():
         question_set = i["paragraphs"][0]["qas"]
         #question_list = []
         #answer_list = []
-        for j in question_set: 
+        for j in question_set:
             qapair = {}
             #question_list.append(j["question"])
             question = j["question"]
@@ -43,11 +43,10 @@ def load_data():
     print(" ")
     print(question_ans_pairs)
 
+    return context_paragraph, question_ans_pairs
 
-
-def main():
-    load_data()
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     load_data()
+#
+# if __name__ == "__main__":
+#     main()
