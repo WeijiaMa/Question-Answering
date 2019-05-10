@@ -19,12 +19,12 @@ def load_data():
         for paragraph in topic["paragraphs"]:
             paragraph_list.append(paragraph["context"])
             question_set = paragraph["qas"]
+            qa_pairs = {}
             for qn in question_set:
-                qa_pair = {}
                 question = qn["question"]
                 answer = [ans["text"] for ans in qn["answers"]]
-                qa_pair[question] = answer
-                question_ans_list.append(qa_pair)
+                qa_pairs[question] = answer
+            question_ans_list.append(qa_pairs)
 
     return paragraph_list, question_ans_list
 
