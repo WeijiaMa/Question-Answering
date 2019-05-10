@@ -7,46 +7,29 @@ a tuple (question_dict)
 import json
 
 def load_data():
-    d = json.load(open('dev-v1.1.json'))
+    file = json.load(open('dev-v1.1.json'))
+    data = file["data"]
+    paragraph_list = []
+    #paragraph_list stores paragraphs in order
+    question_ans_list = []
+    #question_ans_list stores a list of qa pair,
+    #where each qa pair matches a question to its corresponding list of possible answers
 
-    innerfile = d["data"]
+    for topic in data:
+        for paragraph in topic["paragraphs"]:
+            paragraph_list.append(paragraph["context"])
+            question_set = paragraph["qas"]
+            for qn in question_set:
+                qa_pair = {}
+                question = qn["question"]
+                answer = [ans["text"] for ans in qn["answers"]]
+                qa_pair[question] = answer
+                question_ans_list.append(qa_pair)
 
-    context_paragraph = {}
+    return paragraph_list, question_ans_list
 
-    #context_paragraph maps each topic to its paragraph
+def main():
+    load_data()
 
-    question_ans_pairs = {}
-
-    #question_ans_pairs maps each topic to a list of questions
-
-
-    for i in innerfile:
-        subject = i["title"]
-        context_paragraph[subject] = i["paragraphs"][0]["context"]
-        question_set = i["paragraphs"][0]["qas"]
-        #question_list = []
-        #answer_list = []
-        for j in question_set:
-            qapair = {}
-            #question_list.append(j["question"])
-            question = j["question"]
-            answer_options = []
-            for k in j["answers"]:
-                answer_options.append(k["text"])
-            #answer_list.append(answer_options)
-            qapair[question] = answer_options
-            question_ans_pairs[subject] = qapair
-
-        #question_dict[subject] = (question_list, answer_list)
-
-    print(context_paragraph["Super_Bowl_50"])
-    print(" ")
-    print(question_ans_pairs)
-
-    return context_paragraph, question_ans_pairs
-
-# def main():
-#     load_data()
-#
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
