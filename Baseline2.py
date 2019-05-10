@@ -89,7 +89,7 @@ def get_answer(paragraph, question):
 def main():
     paragraph_list, qa_dict_list = load_data.load_data()
     if len(paragraph_list) != len(qa_dict_list):
-        print("Error: mismatch number of paragraphs and number of questions")
+        print("Error: mismatch number of paragraphs and number of qa dictionaries")
         return None
     for i in range(len(paragraphs)):
         paragraph = paragraphs[i]
