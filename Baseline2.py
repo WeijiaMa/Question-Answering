@@ -87,7 +87,7 @@ def get_answer(paragraph, question):
     return answer
 
 def main():
-    paragraph_list, qa_dict_list = load_data.load_data()
+    paragraph_list, qa_dict_list = load_data.load_data('dev-v1.1.json')
     if len(paragraph_list) != len(qa_dict_list):
         print("Error: mismatch number of paragraphs and number of qa dictionaries")
         return None
