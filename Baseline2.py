@@ -33,7 +33,10 @@ def get_unigram_overlap(answer, question):
     answer_bag = set(tokenize(answer))
     question_bag = set(tokenize(question))
     overlap = answer_bag.intersection(question_bag)
-    return len(overlap)/len(answer)
+    if len(answer_bag) == 0:
+        # potential answer is empty, because we separated sentenes by period only
+        return 0
+    return len(overlap)/len(answer_bag)
 
 def get_unigram_counts(doc):
     tlist = tokenize(doc)
@@ -84,12 +87,14 @@ def get_answer(paragraph, question):
     return answer
 
 def main():
-    topic_paragraph, topic_qlist = load_data.load_data()
-    topics = set(topic_paragraph.keys()).intersection(set(topic_qlist.keys()))
-    for topic in topics:
-        paragraph = topic_paragraph[topic]
-        qlist = topic_qlist[topic]
-        for question in qlist:
+    paragraph_list, qa_dict_list = load_data.load_data()
+    if len(paragraph_list) != len(qa_dict_list):
+        print("Error: mismatch number of paragraphs and number of questions")
+        return None
+    for i in range(len(paragraphs)):
+        paragraph = paragraphs[i]
+        qa_dict = qa_dict_list[i]
+        for question in qa_dict.keys():
             print(get_answer(paragraph, question))
             break
 
