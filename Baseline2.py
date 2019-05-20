@@ -91,8 +91,8 @@ def main():
     if len(paragraph_list) != len(qa_dict_list):
         print("Error: mismatch number of paragraphs and number of qa dictionaries")
         return None
-    for i in range(len(paragraphs)):
-        paragraph = paragraphs[i]
+    for i in range(len(paragraph_list)):
+        paragraph = paragraph_list[i]
         qa_dict = qa_dict_list[i]
         for question in qa_dict.keys():
             print(get_answer(paragraph, question))
