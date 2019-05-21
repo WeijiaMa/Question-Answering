@@ -19,24 +19,25 @@ def tokenize(string):
     global _TOKENIZER
     return _TOKENIZER.tokenize(string)
 
-def get_all_spans(sentences):
+def get_all_spans(words):
+    '''
+    returns a list of trigrams in the paragraph, because the average answer
+    length is 3.
+    '''
     spans = []
-    for i in range(len(sentences)):
-        for j in range(i+1,len(sentences)):
-            spans.append(''.join(sentences[i:j]))
+    for i in range(len(words)):
+        if i+3 < len(words):
+            spans.append(words[i]+" "+words[i+1]+" "+words[i+2])
     return spans
 
 def get_unigram_overlap(answer, question):
     '''
-    find the overlaped unigrams divided by length of answer
+    find the overlaped unigrams
     '''
     answer_bag = set(tokenize(answer))
     question_bag = set(tokenize(question))
     overlap = answer_bag.intersection(question_bag)
-    if len(answer_bag) == 0:
-        # potential answer is empty, because we separated sentenes by period only
-        return 0
-    return len(overlap)/len(answer_bag)
+    return len(overlap)
 
 def get_unigram_counts(doc):
     tlist = tokenize(doc)
@@ -69,8 +70,8 @@ def get_answer(paragraph, question):
     '''
     take in 2 strings
     '''
-    sentences = paragraph.split(".")
-    possible_answers = get_all_spans(sentences)
+    words = paragraph.split(" ")
+    possible_answers = get_all_spans(words)
     unigram_overlap = {} #alternatively, bigram
     for answer in possible_answers:
         unigram_overlap[answer] = get_unigram_overlap(answer, question)
@@ -96,7 +97,6 @@ def main():
         qa_dict = qa_dict_list[i]
         for question in qa_dict.keys():
             print(get_answer(paragraph, question))
-            break
 
 if __name__ == "__main__":
     main()
