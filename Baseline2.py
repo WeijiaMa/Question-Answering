@@ -85,18 +85,4 @@ def get_answer(paragraph, question):
             answer = candidate_answer
             max_score = candidate_score
     return answer
-
-def main():
-    paragraph_list, qa_dict_list = load_data.load_data('dev-v1.1.json')
-    if len(paragraph_list) != len(qa_dict_list):
-        print("Error: mismatch number of paragraphs and number of qa dictionaries")
-        return None
-    for i in range(len(paragraphs)):
-        paragraph = paragraphs[i]
-        qa_dict = qa_dict_list[i]
-        for question in qa_dict.keys():
-            print(get_answer(paragraph, question))
-            break
-
-if __name__ == "__main__":
-    main()
+    
