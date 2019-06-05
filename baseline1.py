@@ -1,8 +1,7 @@
 '''
-Simple baseline model for question answering
-Given a question and context, uses random guessing to output a potential answer
-TODO: tokenization step with api tokenizer
-Should the potential answers be sentences, phrases, or words? (or all three?)
+Created by Claudia Naughton on 2019/05/07.
+Simple baseline model for question answering.
+Given a question and context, uses random guessing to output a unigram potential answer
 '''
 
 import load_data

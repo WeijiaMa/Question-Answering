@@ -1,8 +1,21 @@
+'''
+Created by Weijia Ma on 2019/05/22.
+Implements the EM and F1 metrics and evaluate the performance of the 3 models.
+'''
+
 import baseline1
 import baseline2
 import load_data
 import api
+import argparse
 from tqdm import tqdm
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dev_set',
+                        default='dev-v1.1.json'
+                        help='path to dev set')
+    return parser.parse_args()
 
 def get_em(pred, truth):
     ''' return the EM score of a list of predicted answers '''
@@ -31,7 +44,8 @@ def get_f1(pred, truth):
     return f1/len(truth)
 
 def main():
-    paragraph_list, qa_dict_list = load_data.load_data('dev-v1.1.json')
+    args = parse_args()
+    paragraph_list, qa_dict_list = load_data.load_data(args.dev_set)
     if len(paragraph_list) != len(qa_dict_list):
         print("Error: mismatch number of paragraphs and number of qa dictionaries")
         return None
