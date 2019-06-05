@@ -43,7 +43,7 @@ def main():
     api_predictor = api.predictor()
     baseline2_predictor = baseline2.predictor()
 
-    for i in tqdm(range(len(paragraph_list))):  # change this to smaller number to test
+    for i in tqdm(range(len(paragraph_list))):
         paragraph = paragraph_list[i]
         qa_dict = qa_dict_list[i]
         for question in qa_dict.keys():
@@ -64,7 +64,7 @@ def main():
                 print("EM: {}, F1:{}".format(em, f1))
 
     print("Final performance: ")
-    for pred in [baseline1_pred, baseline2_pred]:
+    for pred in [baseline1_pred, baseline2_pred, api_pred]:
         em = get_em(pred, ground_truth)
         f1 = get_f1(pred, ground_truth)
         print("EM: {}, F1:{}".format(em, f1))
