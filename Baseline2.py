@@ -7,6 +7,7 @@ import collections
 import load_data
 import math
 import nltk
+from allennlp.predictors.predictor import Predictor
 
 global _TOKENIZER
 _TOKENIZER = nltk.tokenize.casual.TweetTokenizer(
@@ -19,16 +20,28 @@ def tokenize(string):
     global _TOKENIZER
     return _TOKENIZER.tokenize(string)
 
-def get_all_spans(words):
-    '''
-    returns a list of trigrams in the paragraph, because the average answer
-    length is 3.
-    '''
-    spans = []
-    for i in range(len(words)):
-        if i+3 < len(words):
-            spans.append(words[i]+" "+words[i+1]+" "+words[i+2])
-    return spans
+def predictor():
+    predictor = Predictor.from_path("https://s3-us-west-2.amazonaws.com/allennlp/models/elmo-constituency-parser-2018.03.14.tar.gz")
+    return predictor
+
+def findNP(root, parsedNP):
+    if root['nodeType'] == 'NP':
+        parsedNP.append(root['word'])
+    if 'children' in root.keys():
+        for c in root['children']:
+            findNP(c, parsedNP)
+
+# def get_all_spans(words):
+#     '''
+#     returns a list of trigrams in the paragraph, because the average answer
+#     length is 3.
+#     '''
+#     spans = []
+#     for i in range(len(words)):
+#         #if i+3 < len(words):
+#             #spans.append(words[i]+" "+words[i+1]+" "+words[i+2])
+#         spans.append(words[i])
+#     return spans
 
 def get_unigram_overlap(answer, question):
     '''
@@ -66,18 +79,25 @@ def slide_window(answer, question, paragraph):
         max_score = max(max_score, score)
     return max_score
 
-def get_answer(paragraph, question):
+def get_answer(predictor, paragraph, question):
     '''
     take in 2 strings
     '''
-    words = paragraph.split(" ")
-    possible_answers = get_all_spans(words)
+    # get NP in paragraph
+    p = predictor.predict(sentence=paragraph)
+    root = p['hierplane_tree']['root']
+    parsedNP = []
+    findNP(root, parsedNP)
+
+    # words = paragraph.split(" ")
+    # possible_answers = get_all_spans(words, parsedNP)
     unigram_overlap = {} #alternatively, bigram
-    for answer in possible_answers:
+    for answer in parsedNP:
         unigram_overlap[answer] = get_unigram_overlap(answer, question)
     #pick max several answers
-    num_candidates = 1 + len(unigram_overlap)//10
-    candidates = sorted(unigram_overlap, key=unigram_overlap.get, reverse=True)[:num_candidates]
+    #num_candidates = 1 + len(unigram_overlap)//10
+    #candidates = sorted(unigram_overlap, key=unigram_overlap.get, reverse=True)[:num_candidates]
+    candidates = sorted(unigram_overlap, key=unigram_overlap.get, reverse=True)
     answer = ""
     max_score = -float("inf")
     for candidate_answer in candidates:

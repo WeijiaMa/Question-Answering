@@ -10,6 +10,7 @@ import random
 from random import randint
 import nltk
 
+
 global _TOKENIZER
 _TOKENIZER = nltk.tokenize.casual.TweetTokenizer(
     preserve_case=False)
@@ -20,6 +21,7 @@ def tokenize(string):
 
 def get_answer(paragraph, question):
     tokens = tokenize(paragraph)
-    index = random.randint(0, len(tokens) - 2)
+    random.seed(1)
+    index = random.randint(0, len(tokens) - 1)
 
     return tokens[index]

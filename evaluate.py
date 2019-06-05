@@ -41,14 +41,16 @@ def main():
     api_pred = []
     ground_truth = []
     api_predictor = api.predictor()
+    baseline2_predictor = baseline2.predictor()
 
-    for i in tqdm(range(len(paragraph_list))):  # change this to smaller number to test
+    print(len(paragraph_list))
+    for i in tqdm(range(50)):  # change this to smaller number to test
         paragraph = paragraph_list[i]
         qa_dict = qa_dict_list[i]
         for question in qa_dict.keys():
             ground_truth_ans = qa_dict[question]
             baseline1_ans = baseline1.get_answer(paragraph, question)
-            baseline2_ans = baseline2.get_answer(paragraph, question)
+            baseline2_ans = baseline2.get_answer(baseline2_predictor, paragraph, question)
             api_ans = api.get_answer(api_predictor,paragraph, question)
 
             ground_truth.append(ground_truth_ans)
@@ -56,7 +58,7 @@ def main():
             baseline2_pred.append(baseline2_ans)
             api_pred.append(api_ans)
 
-    for pred in [baseline1_pred, baseline2_pred, api_pred]:
+    for pred in [baseline1_pred, baseline2_pred]:
         em = get_em(pred, ground_truth)
         f1 = get_f1(pred, ground_truth)
         print("EM: {}, F1:{}".format(em, f1))
