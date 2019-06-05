@@ -44,7 +44,7 @@ def main():
     baseline2_predictor = baseline2.predictor()
 
     print(len(paragraph_list))
-    for i in tqdm(range(50)):  # change this to smaller number to test
+    for i in tqdm(len(paragraph_list)):  # change this to smaller number to test
         paragraph = paragraph_list[i]
         qa_dict = qa_dict_list[i]
         for question in qa_dict.keys():
@@ -57,7 +57,14 @@ def main():
             baseline1_pred.append(baseline1_ans)
             baseline2_pred.append(baseline2_ans)
             api_pred.append(api_ans)
+        if i % 10 == 0:
+            print("{} paragraphs: ".foramt(i))
+            for pred in [baseline1_pred, baseline2_pred, api_pred]:
+                em = get_em(pred, ground_truth)
+                f1 = get_f1(pred, ground_truth)
+                print("EM: {}, F1:{}".format(em, f1))
 
+    print("Final performance: ")
     for pred in [baseline1_pred, baseline2_pred]:
         em = get_em(pred, ground_truth)
         f1 = get_f1(pred, ground_truth)
