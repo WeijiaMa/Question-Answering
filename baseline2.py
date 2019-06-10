@@ -21,27 +21,21 @@ def tokenize(string):
     return _TOKENIZER.tokenize(string)
 
 def predictor():
+    '''
+    return the allennlp constituency parser
+    '''
     predictor = Predictor.from_path("https://s3-us-west-2.amazonaws.com/allennlp/models/elmo-constituency-parser-2018.03.14.tar.gz")
     return predictor
 
 def findNP(root, parsedNP):
+    '''
+    Find all the NP phrases in the subtree of the root node
+    '''
     if root['nodeType'] == 'NP':
         parsedNP.append(root['word'])
     if 'children' in root.keys():
         for c in root['children']:
             findNP(c, parsedNP)
-
-# def get_all_spans(words):
-#     '''
-#     returns a list of trigrams in the paragraph, because the average answer
-#     length is 3.
-#     '''
-#     spans = []
-#     for i in range(len(words)):
-#         #if i+3 < len(words):
-#             #spans.append(words[i]+" "+words[i+1]+" "+words[i+2])
-#         spans.append(words[i])
-#     return spans
 
 def get_unigram_overlap(answer, question):
     '''
@@ -81,7 +75,7 @@ def slide_window(answer, question, paragraph):
 
 def get_answer(predictor, paragraph, question):
     '''
-    take in 2 strings
+    tak in a constituency parser and 2 strings
     '''
     # get NP in paragraph
     p = predictor.predict(sentence=paragraph)
@@ -89,15 +83,13 @@ def get_answer(predictor, paragraph, question):
     parsedNP = []
     findNP(root, parsedNP)
 
-    # words = paragraph.split(" ")
-    # possible_answers = get_all_spans(words, parsedNP)
     unigram_overlap = {} #alternatively, bigram
     for answer in parsedNP:
-        unigram_overlap[answer] = get_unigram_overlap(answer, question)
+        if len(answer) < 30:
+            unigram_overlap[answer] = get_unigram_overlap(answer, question)
     #pick max several answers
-    #num_candidates = 1 + len(unigram_overlap)//10
-    #candidates = sorted(unigram_overlap, key=unigram_overlap.get, reverse=True)[:num_candidates]
-    candidates = sorted(unigram_overlap, key=unigram_overlap.get, reverse=True)
+    num_candidates = 1 + len(unigram_overlap)//10
+    candidates = sorted(unigram_overlap, key=unigram_overlap.get, reverse=True)[:num_candidates]
     answer = ""
     max_score = -float("inf")
     for candidate_answer in candidates:

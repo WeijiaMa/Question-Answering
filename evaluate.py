@@ -9,11 +9,12 @@ import load_data
 import api
 import argparse
 from tqdm import tqdm
+import warnings
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dev_set',
-                        default='dev-v1.1.json'
+                        default='dev-v1.1.json',
                         help='path to dev set')
     return parser.parse_args()
 
@@ -45,6 +46,7 @@ def get_f1(pred, truth):
 
 def main():
     args = parse_args()
+    warnings.filterwarnings("ignore")
     paragraph_list, qa_dict_list = load_data.load_data(args.dev_set)
     if len(paragraph_list) != len(qa_dict_list):
         print("Error: mismatch number of paragraphs and number of qa dictionaries")

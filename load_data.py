@@ -10,10 +10,10 @@ import json
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dev_set',
-                        default='dev-v1.1.json'
+                        default='dev-v1.1.json',
                         help='path to dev set')
     parser.add_argument('--training_set',
-                        default='train-v1.1.json'
+                        default='train-v1.1.json',
                         help='path to training set')
     return parser.parse_args()
 
